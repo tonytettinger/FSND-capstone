@@ -21,9 +21,10 @@ def create_app(test_config=None):
     def be_cool():
         return "Be cool, man, be coooool! You're almost a FSND grad!"
 
+return app
+
 app = create_app()
 
 if __name__ == '__main__':
     app.run()
     
-return app
