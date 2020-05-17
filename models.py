@@ -5,7 +5,7 @@ import json
 
 database_path = os.environ.get('DATABASE_URL')
 if not database_path:
-    database_name = "antaltettinger"
+    database_name = "movies_test"
     database_path = "postgres://{}/{}".format('localhost:5432', database_name)
 
 db = SQLAlchemy()
@@ -27,7 +27,7 @@ Person
 Have title and release year
 '''
 class Movie(db.Model):  
-  __tablename__ = 'Movies'
+  __tablename__ = 'movies'
 
   id = Column(Integer, primary_key=True)
   title = Column(String)
@@ -36,6 +36,17 @@ class Movie(db.Model):
   def __init__(self, title, release_date):
     self.title = title
     self.release_date = release_date
+  
+  def insert(self):
+    db.session.add(self)
+    db.session.commit()
+  
+  def update(self):
+    db.session.commit()
+
+  def deletes(self):
+    db.session.delete(self)
+    db.session.commit()
     
   def format(self):
     return {
@@ -44,7 +55,7 @@ class Movie(db.Model):
       'release_date': self.release_date}
     
 class Actor(db.Model):  
-  __tablename__ = 'Actors'
+  __tablename__ = 'actors'
 
   id = Column(Integer, primary_key=True)
   name = Column(String)
@@ -55,6 +66,17 @@ class Actor(db.Model):
     self.name = name
     self.age = age
     self.gender = gender
+
+  def insert(self):
+    db.session.add(self)
+    db.session.commit()
+  
+  def update(self):
+    db.session.commit()
+
+  def deletes(self):
+    db.session.delete(self)
+    db.session.commit()
     
   def format(self):
     return {
