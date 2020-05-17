@@ -1,9 +1,12 @@
 import os
-from sqlalchemy import Column, String, Integer, create_engine
+from sqlalchemy import Column, String, Integer, DateTime, create_engine
 from flask_sqlalchemy import SQLAlchemy
 import json
 
-database_path = os.environ['DATABASE_URL']
+database_path = os.environ.get('DATABASE_URL')
+if not database_path:
+    database_name = "antaltettinger"
+    database_path = "postgres://{}/{}".format('localhost:5432', database_name)
 
 db = SQLAlchemy()
 
@@ -23,19 +26,39 @@ def setup_db(app, database_path=database_path):
 Person
 Have title and release year
 '''
-class Person(db.Model):  
-  __tablename__ = 'People'
+class Movie(db.Model):  
+  __tablename__ = 'Movies'
 
   id = Column(Integer, primary_key=True)
-  name = Column(String)
-  catchphrase = Column(String)
+  title = Column(String)
+  release_date = Column(DateTime)
 
-  def __init__(self, name, catchphrase=""):
-    self.name = name
-    self.catchphrase = catchphrase
-
+  def __init__(self, title, release_date):
+    self.title = title
+    self.release_date = release_date
+    
   def format(self):
     return {
       'id': self.id,
-      'name': self.name,
-      'catchphrase': self.catchphrase}
+      'title': self.title,
+      'release_date': self.release_date}
+    
+class Actor(db.Model):  
+  __tablename__ = 'Actors'
+
+  id = Column(Integer, primary_key=True)
+  name = Column(String)
+  age = Column(Integer)
+  gender = Column(String)
+
+  def __init__(self, name, age, gender):
+    self.name = name
+    self.age = age
+    self.gender = gender
+    
+  def format(self):
+    return {
+      'id': self.name,
+      'title': self.age,
+      'release_date': self.gender}
+    

@@ -29,7 +29,7 @@ end
 # unset irrelevant variables
 deactivate nondestructive
 
-set -gx VIRTUAL_ENV "/Users/antaltettinger/Documents/Learning/Udacity-Full-Stack-Web-Developer-Nanodegree/Project 5/env"
+set -gx VIRTUAL_ENV "/Users/antaltettinger/Documents/Learning/Heroku/env"
 
 set -gx _OLD_VIRTUAL_PATH $PATH
 set -gx PATH "$VIRTUAL_ENV/bin" $PATH
