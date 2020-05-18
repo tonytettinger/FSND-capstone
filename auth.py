@@ -7,7 +7,7 @@ from urllib.request import urlopen
 
 AUTH0_DOMAIN = 'antal.eu.auth0.com'
 ALGORITHMS = ['RS256']
-API_AUDIENCE = 'coffeeshopudacity'
+API_AUDIENCE = 'movie'
 
 ## AuthError Exception
 '''

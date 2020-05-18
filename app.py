@@ -42,8 +42,10 @@ def create_app(test_config=None):
             'url': url
         })
     
+
     @app.route('/movie', methods=['POST'])
-    def add_movie():
+    @requires_auth('post:movie')
+    def add_movie(jwt):
         
         if not request.method == 'POST':
             abort(405)
@@ -69,12 +71,55 @@ def create_app(test_config=None):
 
         finally:
             db.session.close()
-
-    @app.route('/coolkids')
-    def be_cool():
-        return "Be cool, man, be coooool! You're almost a FSND grad!"
+    
+    @app.route('/movie/<int:delete_id>', methods=['DELETE'])
+    @requires_auth('delete:movie')
+    def delete_movie(jwt, delete_id):
+        
+        to_delete = Movie.query.get(delete_id)
+        if to_delete is None:
+            abort(404)
+        try:
+            to_delete.deletes()
+            return jsonify({
+                'success': True,
+                'delete': str(delete_id)
+            })
+        except:
+            db.session.rollback()
+            abort(422)
+        finally:
+            db.session.close()
+            
+    #Error handling
+       
+    @app.errorhandler(404)
+    def not_found(error):
+        return jsonify({
+        'success': False,
+        'error': 404,
+        "message": "Resource Not found"
+        }), 404
+    
+    @app.errorhandler(422)
+    def unprocessable(error):
+        return jsonify({
+                        "success": False, 
+                        "error": 422,
+                        "message": "unprocessable"
+                        }), 422
+    
+    @app.errorhandler(AuthError)
+    def auth_error(exception):
+        return jsonify({
+        "success": False,
+        "error": exception.status_code,
+        "message": exception.error['code']
+        }), exception.status_code
 
     return app
+
+
 
 app = create_app()
 
