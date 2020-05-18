@@ -77,7 +77,6 @@ class MoviesTestCase(unittest.TestCase):
         CA_TOKEN = os.getenv("CA_TOKEN")
         # Casting Director (CA role + can add, delete, patch actors and movies)
         CD_TOKEN = os.getenv("CD_TOKEN")
-        database_path = os.getenv("DATABASE_URL")
         setup_db(self.app, self.database_path)
         self.director_headers = {
             "Content-Type": "application/json",

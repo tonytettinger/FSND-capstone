@@ -37,10 +37,7 @@ def create_app(test_config=None):
             f"{AUTH0_CALLBACK_URL}"
         )
         
-        return jsonify({
-            'message': 'Please login to this URL to obtain a new JWT token',
-            'url': url
-        })
+        return f"Please login in this URL to obtain new JWT tokens for the Casting Director and Assistant role if the provided tokens expired: {url}"
         
     @app.route('/movie', methods=['GET'])
     @requires_auth('get:movie')
@@ -109,7 +106,6 @@ def create_app(test_config=None):
             movie = Movie(**data)
             movie.insert()
             return jsonify(data)
-
         except:
             db.session.rollback()
             abort(422)
