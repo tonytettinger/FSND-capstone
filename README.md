@@ -1,4 +1,4 @@
-# Full Stack Nano Degree - Capstone - TDD Secure API Development
+# Udacity Full Stack Developer Nanodegree Capstone Project
 
 ## Motivation
 
@@ -11,6 +11,8 @@ The motivation for this project is to demonstrate skills in combining the use of
 - Testing: Comprehensive RBAC and error handling has been implemented as part of the test-driven development process.
 - Documentation: Setup instructions and endpoints has been documented.
 - Deployment: The final code is deployed on Heroku and tests can be run agains its database.
+
+This project is for a movie agency which has movies and actors listed in its database. There are two roles, Casting Assistant and Casting Director. For viewing the list of movies and actors in the database the user shoul be logged with the Casting Assistant role. To add, delete and modify movies the role of the user has to be Casting Director.
 
 ## Setup and dependencies
 
