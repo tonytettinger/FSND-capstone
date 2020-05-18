@@ -8,6 +8,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 
+
 def create_app(test_config=None):
     app = Flask(__name__)
     setup_db(app)
@@ -22,7 +23,7 @@ def create_app(test_config=None):
             "Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE, OPTIONS"
         )
         return response
-    
+
     @app.route('/')
     def home_run():
         AUTH0_DOMAIN = os.getenv("AUTH0_DOMAIN")
@@ -36,18 +37,19 @@ def create_app(test_config=None):
             f"{CLIENT_ID}&redirect_uri="
             f"{AUTH0_CALLBACK_URL}"
         )
-        
+     
         return f"Please login in this URL to obtain new JWT tokens for the Casting Director and Assistant role if the provided tokens expired: {url}"
-        
+
+   
     @app.route('/movie', methods=['GET'])
     @requires_auth('get:movie')
     def get_movies(jwt):
         movies = Movie.query.all()
         if (len(movies) == 0):
             abort(404)
-            
+         
         def movie_json(movie):
-            return  {
+            return{
                 'id': movie.id,
                 'title': movie.title,
                 'release_date': movie.release_date
@@ -60,7 +62,8 @@ def create_app(test_config=None):
             })
         except:
             abort(422)
-    
+
+
     @app.route('/actor', methods=['GET'])
     @requires_auth('get:actor')
     def get_actors(jwt):
@@ -69,7 +72,7 @@ def create_app(test_config=None):
             abort(404)
             
         def actor_json(actor):
-            return  {
+            return{
                 'id': actor.id,
                 'name': actor.name,
                 'age': actor.age,
@@ -83,20 +86,19 @@ def create_app(test_config=None):
             })
         except:
             abort(422)
-    
 
     @app.route('/movie', methods=['POST'])
     @requires_auth('post:movie')
     def add_movie(jwt):
-        
+     
         if not request.method == 'POST':
             abort(405)
 
         try:
             body = request.get_json()
             data = {
-            'title': body['title'],
-            'release_date': body['release_date']
+                'title': body['title'],
+                'release_date': body['release_date']
             }
 
         except:
@@ -106,17 +108,18 @@ def create_app(test_config=None):
             movie = Movie(**data)
             movie.insert()
             return jsonify(data)
+
         except:
             db.session.rollback()
             abort(422)
 
         finally:
             db.session.close()
-    
+  
     @app.route('/movie/<int:delete_id>', methods=['DELETE'])
     @requires_auth('delete:movie')
     def delete_movie(jwt, delete_id):
-        
+      
         to_delete = Movie.query.get(delete_id)
         if to_delete is None:
             abort(404)
@@ -131,12 +134,12 @@ def create_app(test_config=None):
             abort(422)
         finally:
             db.session.close()
-            
+          
     @app.route('/movie/<int:patch_id>', methods=['PATCH'])
     @requires_auth('patch:movie')
     def patch_movie(jwt, patch_id):
         to_patch = Movie.query.filter(Movie.id == patch_id).one_or_none()
-        if (to_patch == None):
+        if if to_patch is None:
             abort(404)
         try:
             body = request.get_json()
@@ -153,14 +156,14 @@ def create_app(test_config=None):
                 'success': True,
                 'movies': patched_movie_json
             })
-        
+       
         except:
             db.session.rollback()
             abort(422)
         finally:
             db.session.close()
             
-    #Error handling
+    # Error handling
        
     @app.errorhandler(404)
     def not_found(error):
@@ -181,17 +184,15 @@ def create_app(test_config=None):
     @app.errorhandler(AuthError)
     def auth_error(exception):
         return jsonify({
-        "success": False,
-        "error": exception.status_code,
-        "message": exception.error['code']
+            "success": False,
+            "error": exception.status_code,
+            "message": exception.error['code']
         }), exception.status_code
 
     return app
-
 
 
 app = create_app()
 
 if __name__ == '__main__':
     app.run()
-    

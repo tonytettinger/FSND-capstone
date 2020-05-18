@@ -16,6 +16,7 @@ patch:movies
 patch:actors
 """
 
+
 def insert_test_movie():
     data = {
         'title': 'Inception 2',
@@ -23,7 +24,7 @@ def insert_test_movie():
     }
     movie = Movie(**data)
     movie.insert()
-    
+   
     return data
 
 
@@ -37,6 +38,7 @@ def delete_test_movie():
     if query is not None:
         query.deletes()
 
+
 def insert_test_actor():
     data = {
         'name': 'Roberta',
@@ -45,7 +47,7 @@ def insert_test_actor():
     }
     actor = Actor(**data)
     actor.insert()
-    
+ 
     return data
 
 
@@ -107,7 +109,7 @@ class MoviesTestCase(unittest.TestCase):
     For the failure there is one failure and one RBAC based failure included for a given endpoint
     '''
     
-    #Endpoint: POST /movie tests: RBAC success, 422 failure, RBAC failure 403
+    # Endpoint: POST /movie tests: RBAC success, 422 failure, RBAC failure 403
     
     '''
     TEST ROLE BASED SUCCESS: Endpoint POST /movie
@@ -116,8 +118,8 @@ class MoviesTestCase(unittest.TestCase):
     def test_post_movie_director(self):
         response = self.client().post(f"/movie", data=json.dumps(self.test_movie), content_type='application/json', headers=self.director_headers)
         self.assertEqual(response.status_code, 200)
-        json_response  = json.loads(response.data)
-        self.assertEqual( json_response, self.test_movie)
+        json_response = json.loads(response.data)
+        self.assertEqual(json_response, self.test_movie)
         delete_test_movie()
     
     '''
@@ -140,7 +142,7 @@ class MoviesTestCase(unittest.TestCase):
         response = self.client().post(f"/movie", data=json.dumps(self.test_movie), content_type='application/json', headers=self.assistant_headers)
         self.assertEqual(response.status_code, 403)
         
-    #Endpoint: DELETE /movie tests: RBAC success, 422 failure, RBAC failure 403
+    # Endpoint: DELETE /movie tests: RBAC success, 422 failure, RBAC failure 403
     
     '''
     TEST ROLE BASED SUCCESS:  Endpoint DELETE /movie/<int:post_id>
@@ -191,7 +193,7 @@ class MoviesTestCase(unittest.TestCase):
         delete_test_movie()
     
 
-    #Endpoint: GET /movie tests: RBAC success, 422 failure, RBAC failure 403
+    # Endpoint: GET /movie tests: RBAC success, 422 failure, RBAC failure 403
     
     '''
     TEST ROLE BASED SUCCESS:  Endpoint GET /movie, 200
@@ -258,7 +260,7 @@ class MoviesTestCase(unittest.TestCase):
     
     def test_get_actors_401(self):
         insert_test_actor()
-        #no headers included
+        # no headers included
         response = self.client().get(f"/actor", content_type='application/json')
         self.assertEqual(response.status_code, 401)
         delete_test_actor()
@@ -272,7 +274,7 @@ class MoviesTestCase(unittest.TestCase):
         response = self.client().get(f"/actor", content_type='application/json', headers=self.assistant_headers)
         self.assertEqual(response.status_code, 404)
         
-    #Endpoint: PATCH /movie tests: RBAC success, 422 failure, RBAC failure 403
+    # Endpoint: PATCH /movie tests: RBAC success, 422 failure, RBAC failure 403
 
     '''
     TEST ROLE BASED SUCCESS:  Endpoint PATCH /movie, 200
@@ -285,12 +287,12 @@ class MoviesTestCase(unittest.TestCase):
             'title': 'Inception 5',
             'release_date': '2025-05-05'
         }
-        data=json.dumps(new_movie)
+        data = json.dumps(new_movie)
         movie = query_test_movie()
         movie_id = movie.id
         response = self.client().patch(f"/movie/{movie_id}", content_type='application/json', data=data, headers=self.director_headers)
         self.assertEqual(response.status_code, 200)
-        #Check if the id of the movie in the response is the same one as inserted
+        # Check if the id of the movie in the response is the same one as inserted
         json_response_data_movie_name = json.loads(response.data)['movies']['title']
         self.assertEqual(json_response_data_movie_name, "Inception 5")
         delete_test_movie()
@@ -305,7 +307,7 @@ class MoviesTestCase(unittest.TestCase):
             'title': "Inception 5",
             'release_date': '2025-05-05'
         }
-        data=json.dumps(new_movie)
+        data = json.dumps(new_movie)
         movie_id = 9999
         response = self.client().patch(f"/movie/{movie_id}", content_type='application/json', data=data, headers=self.director_headers)
         self.assertEqual(response.status_code, 404)
@@ -322,7 +324,7 @@ class MoviesTestCase(unittest.TestCase):
             'title': "Inception 5",
             'release_date': '2025-05-05'
         }
-        data=json.dumps(new_movie)
+        data = json.dumps(new_movie)
         movie = query_test_movie()
         movie_id = movie.id
         response = self.client().patch(f"/movie/{movie_id}", content_type='application/json', data=data, headers=self.assistant_headers)
