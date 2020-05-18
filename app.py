@@ -41,6 +41,51 @@ def create_app(test_config=None):
             'message': 'Please login to this URL',
             'url': url
         })
+        
+    @app.route('/movie', methods=['GET'])
+    @requires_auth('get:movie')
+    def get_movies(jwt):
+        movies = Movie.query.all()
+        if (len(movies) == 0):
+            abort(404)
+            
+        def movie_json(movie):
+            return  {
+                'id': movie.id,
+                'title': movie.title,
+                'release_date': movie.release_date
+            }
+        try:
+            movie_list_json = [movie_json(movie) for movie in movies]
+            return jsonify({
+                'success': True,
+                'movies': movie_list_json
+            })
+        except:
+            abort(422)
+    
+    @app.route('/actor', methods=['GET'])
+    @requires_auth('get:actor')
+    def get_actors(jwt):
+        actors = Actor.query.all()
+        if (len(actors) == 0):
+            abort(404)
+            
+        def actor_json(actor):
+            return  {
+                'id': actor.id,
+                'name': actor.name,
+                'age': actor.age,
+                'gender': actor.gender
+            }
+        try:
+            actor_list_json = [actor_json(actor) for actor in actors]
+            return jsonify({
+                'success': True,
+                'actors': actor_list_json
+            })
+        except:
+            abort(422)
     
 
     @app.route('/movie', methods=['POST'])
@@ -85,6 +130,35 @@ def create_app(test_config=None):
                 'success': True,
                 'delete': str(delete_id)
             })
+        except:
+            db.session.rollback()
+            abort(422)
+        finally:
+            db.session.close()
+            
+    @app.route('/movie/<int:patch_id>', methods=['PATCH'])
+    @requires_auth('patch:movie')
+    def patch_movie(jwt, patch_id):
+        to_patch = Movie.query.filter(Movie.id == patch_id).one_or_none()
+        if (to_patch == None):
+            abort(404)
+        
+        try:
+            body = request.get_json()
+            req_title = body.get("title")
+            req_release_date = body.get("release_date")
+            to_patch.title = req_title
+            to_patch.release_date = req_release_date
+            patched_movie = Movie.query.filter(Movie.id == patch_id).one_or_none()
+            patched_movie_json = {
+                'title': patched_movie.title,
+                'release_date': patched_movie.release_date
+            }
+            return jsonify({
+                'success': True,
+                'movies': patched_movie_json
+            })
+        
         except:
             db.session.rollback()
             abort(422)
