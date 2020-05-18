@@ -38,10 +38,13 @@ def create_app(test_config=None):
             f"{AUTH0_CALLBACK_URL}"
         )
      
-        return jsonify({
-            'message': 'If the JWT tokens in the downloaded project folder expired please follow the README.txt for instructions and request new JWT tokens at this URL:',
-            'url': url
-        })
+        return jsonify(
+            {
+                "message": "If the JWT tokens in the downloaded project folder expired please follow the README.txt\
+                            for instructions and request new JWT tokens at this URL:",
+                "url": url
+            }
+        )
 
   
     @app.route('/movie', methods=['GET'])
@@ -142,7 +145,7 @@ def create_app(test_config=None):
     @requires_auth('patch:movie')
     def patch_movie(jwt, patch_id):
         to_patch = Movie.query.filter(Movie.id == patch_id).one_or_none()
-        if if to_patch is None:
+        if to_patch is None:
             abort(404)
         try:
             body = request.get_json()
