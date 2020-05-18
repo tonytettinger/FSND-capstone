@@ -38,7 +38,7 @@ def create_app(test_config=None):
         )
         
         return jsonify({
-            'message': 'Please login to this URL',
+            'message': 'Please login to this URL to obtain a new JWT token',
             'url': url
         })
         
@@ -142,7 +142,6 @@ def create_app(test_config=None):
         to_patch = Movie.query.filter(Movie.id == patch_id).one_or_none()
         if (to_patch == None):
             abort(404)
-        
         try:
             body = request.get_json()
             req_title = body.get("title")
