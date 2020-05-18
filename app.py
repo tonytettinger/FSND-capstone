@@ -38,9 +38,12 @@ def create_app(test_config=None):
             f"{AUTH0_CALLBACK_URL}"
         )
      
-        return f"Please login in this URL to obtain new JWT tokens for the Casting Director and Assistant role if the provided tokens expired: {url}"
+        return jsonify({
+            'message': 'If the JWT tokens in the downloaded project folder expired please follow the README.txt for instructions and request new JWT tokens at this URL:',
+            'url': url
+        })
 
-   
+  
     @app.route('/movie', methods=['GET'])
     @requires_auth('get:movie')
     def get_movies(jwt):
