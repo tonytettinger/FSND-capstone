@@ -2,7 +2,7 @@
 
 ## Motivation
 
-Create a back-end application which demonstrates the functinality of endpoints with Role Based Access tests.
+Create a back-end application which demonstrates the functionality of endpoints with Role Based Access tests.
 To implement that JWT authentication has been included in the project and current JWT's has been provided for testing.
 The motivation for this project is to demonstrate skills in combining the use of authorization tools, RBAC endpoints, error handling, test writing and handling data between the front and back-end of the application.
 
